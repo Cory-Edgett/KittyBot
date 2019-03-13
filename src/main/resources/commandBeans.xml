@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <bean id="command"				class="core.commands.Command" abstract ="true">
+    	<property name="prefix"		value="${bot.prefix}"/>
+    	<property name="bot"		ref="kittyBot"/>
+    	<property name="trainer"	ref="trainer"/>
+    </bean>
+	<bean id="randomCatCommand"		class="core.commands.RandomCatCommand" 	parent="command"></bean>
+    <bean id="helpCommand"			class="core.commands.HelpCommand" 		parent="command"></bean>
+    <bean id="updateCommand"		class="core.commands.UpdateCommand" 	parent="command"></bean>
+    <bean id="quitCommand"			class="core.commands.QuitCommand"		parent="command"></bean>
+    <bean id="versionCommand"		class="core.commands.VersionCommand"	parent="command"></bean>
+    <bean id="vectorMapCommand"		class="core.commands.VectorMapCommand"	parent="command"></bean>
+    <bean id="learnCommand"			class="core.commands.LearnCommand"		parent="command">
+    	<property name="trainer"	ref="trainer"/>
+    </bean>
+</beans>
