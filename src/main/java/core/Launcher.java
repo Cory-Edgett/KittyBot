@@ -19,8 +19,6 @@ public class Launcher extends Application {
 		// try with resources: ctx is always closed
 		try(final AbstractApplicationContext ctx = new ClassPathXmlApplicationContext("coreBeans.xml")) {
 			KittyBot bot = ctx.getBean(KittyBot.class);
-			//ApplicationController controller = ctx.getBean(ApplicationController.class);
-			//bot.setupBot();
 			bot.printGuilds();
 		} catch (InterruptedException e) {
 			ExceptionHandler.printErr(e);
