@@ -7,16 +7,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import admin.app.controller.ApplicationController;
 import core.utils.ExceptionHandler;
-import javafx.application.Application;
-import javafx.stage.Stage;
 
-public class Launcher extends Application {
+public class Launcher {
 	public static void main(String[] args) {
-		launch(args);
-	}
-	@Override
-	public void start(Stage stage) {
-		// try with resources: ctx is always closed
 		try(final AbstractApplicationContext ctx = new ClassPathXmlApplicationContext("coreBeans.xml")) {
 			KittyBot bot = ctx.getBean(KittyBot.class);
 			bot.printGuilds();
