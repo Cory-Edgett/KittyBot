@@ -12,5 +12,3 @@ In Config.properties:
 [Java Discord API](https://github.com/DV8FromTheWorld/JDA)
 
 [Spring Framework](https://spring.io/)
-
-[deeplearning4j/word2vec](https://deeplearning4j.org/docs/latest/deeplearning4j-nlp-word2vec)
