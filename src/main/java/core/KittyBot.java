@@ -2,21 +2,22 @@ package core;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-
+import java.util.List;
 import javax.security.auth.login.LoginException;
 
-import core.commands.Command;
+import core.commands.CommandListener;
 import core.commands.HelpCommand;
-import core.commands.LearnCommand;
 import core.commands.QuitCommand;
 import core.commands.RandomCatCommand;
 import core.commands.UpdateCommand;
-import core.commands.VectorMapCommand;
 import core.commands.VersionCommand;
 import core.utils.ExceptionHandler;
 import core.utils.KittyBotInfo;
 import core.BotConnection;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.User;
 
 public class KittyBot {
 	
@@ -27,14 +28,25 @@ public class KittyBot {
 	private UpdateCommand updateCommand;
 	private QuitCommand quitCommand;
 	private VersionCommand versionCommand;
-	private LearnCommand learnCommand;
-	private VectorMapCommand vectorMapCommand;
-
+	private KittyBotInfo info;
+	private CommandListener listener;
+	private ThreadManager threadManager;
 	//-----------------//
-	
 	/* values found in Config.properties */
 	private String presenceMessage;
 	private String ownerId;
+	
+	public void setThreadManager(ThreadManager threadManager) {
+		this.threadManager = threadManager;
+	}
+	
+	public void setListener(CommandListener listener) {
+		this.listener = listener;
+	}
+	
+	public void setInfo(KittyBotInfo info) {
+		this.info = info;
+	}
 	
 	public void setPresenceMessage(String presenceMessage) {
 		this.presenceMessage = presenceMessage;
@@ -68,14 +80,6 @@ public class KittyBot {
 		this.versionCommand = v;
 	}
 	
-	public void setLearnCommand(LearnCommand learnCommand) {
-		this.learnCommand = learnCommand;
-	}
-	
-	public void setVectorMapCommand(VectorMapCommand vectorMapCommand) {
-		this.vectorMapCommand = vectorMapCommand;
-	}
-	
 
 	public BotConnection getConnection() {
 		return connection;
@@ -98,27 +102,33 @@ public class KittyBot {
 	 * 			In case the bot is interrupted while waiting for ready.
 	 */
 	public void setupBot() throws LoginException, InterruptedException {
-		registerListeners();
+		registerListener();
 		connection.login();
 		connection.awaitReady();
 		connection.setGame(presenceMessage);
-		System.out.println("Bot setup with version#" + KittyBotInfo.getCurrentVersion());
+		System.out.println("Bot setup with version#" + info.getCurrentVersion());
 	}
 	
 	/**
-	 * Adds all commands to the help command tree-map, and then registers
-	 * 		those commands as event listeners for the bot.
+	 * Registers the event listener.
 	 */
-	private void registerListeners() {
-		//TODO: Automate listener registration with spring if possible.
-
-		connection.addEventListener(helpCommand.registerCommand(helpCommand));
-		connection.addEventListener(helpCommand.registerCommand(randomCatCommand));
-		connection.addEventListener(helpCommand.registerCommand(updateCommand));
-		connection.addEventListener(helpCommand.registerCommand(quitCommand));
-		connection.addEventListener(helpCommand.registerCommand(versionCommand));
-		connection.addEventListener(helpCommand.registerCommand(learnCommand));
-		connection.addEventListener(helpCommand.registerCommand(vectorMapCommand));
+	private void registerListener() {
+		connection.addEventListener(registerCommands(listener));
+	}
+	
+	/**
+	 * Adds all commands to the help command tree-map and command listener
+	 * 		command-list.
+	 */
+	private CommandListener registerCommands(CommandListener listener) {
+		//TODO: Automate command registration with spring if possible.
+		helpCommand.registerCommand(listener.registerCommand(helpCommand));
+		helpCommand.registerCommand(listener.registerCommand(quitCommand));
+		helpCommand.registerCommand(listener.registerCommand(randomCatCommand));
+		helpCommand.registerCommand(listener.registerCommand(updateCommand));
+		helpCommand.registerCommand(listener.registerCommand(versionCommand));
+		
+		return listener;
 	}
 	
 	/**
@@ -131,19 +141,45 @@ public class KittyBot {
 		System.out.println("In " + api.getGuilds().size() + " guilds: ");
 		api.getGuilds().forEach( guild -> System.out.println(guild.getName()));
 	}
+	/**
+	 * 
+	 * @return The list of connected guilds.
+	 * @throws InterruptedException 
+	 */
+	public List<Guild> getGuilds() throws InterruptedException {
+		connection.awaitReady();
+		return connection.getApi().getGuilds();
+	}
+	
+	/**
+	 * 
+	 * @param guild
+	 * @return The list of channels in guild.
+	 */
+	public List<TextChannel> getTextChannels(Guild guild){
+		return guild.getTextChannels();
+	}
+	
+	public User getSelf() {
+		return connection.getApi().getSelfUser();
+	}
+	
+	public String getVersion() {
+		return info.getCurrentVersion();
+	}
 	
 	/**
 	 * Restarts the bot with the latest version.
 	 */
 	public void restart() {
 		try {
-			System.out.printf("Updating bot: %s -> %s\n", KittyBotInfo.getCurrentVersion(), KittyBotInfo.findNewVersion());
-			this.start(KittyBotInfo.getNewestJarPath());
+			System.out.printf("Updating bot: %s -> %s\n", info.getCurrentVersion(), info.findNewVersion());
+			this.start(info.getNewestJarPath());
 		} catch (IOException | URISyntaxException e) {
 			ExceptionHandler.printErr(e);
 			System.err.println("Restart failed.");
 		}
-		this.quit(0);
+		this.shutdown(0);
 	}
 	
 	/**
@@ -166,7 +202,14 @@ public class KittyBot {
 	 * 		0 - Normal
 	 * 	   !0 - TODO: Implement exit statuses.
 	 */
-	public void quit(int status) {
+	public void shutdown(int status) {
+		threadManager.destroyAll();
+		try {
+			ThreadManager.waitForThreads();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.connection.logout();
 		System.exit(0);
 	}

@@ -15,10 +15,14 @@ public class KittyBotInfo {
 	public static final String VERSION_REGEX = "kittyBot-([0-9]*\\.[0-9]*\\.[0-9]*_*[0-9]*)\\.jar";
 	public static final FilenameFilter FILE_REGEX = new RegexFileFilter(VERSION_REGEX);
 	
-	public static String CURRENT_VERSION;
+	public String CURRENT_VERSION;
 	
 	public void setCURRENT_VERSION(String ver) {
 		CURRENT_VERSION = ver;
+	}
+	
+	public String getCurrentVersion() {
+		return CURRENT_VERSION;
 	}
 	
 	/**
@@ -26,7 +30,7 @@ public class KittyBotInfo {
 	 * @return
 	 * 		the newest version number.
 	 */
-	public static String findNewVersion() {
+	public String findNewVersion() {
 		System.out.println();
 		File dir;
 		try {
@@ -52,24 +56,20 @@ public class KittyBotInfo {
 		return "N/A";
 	}
 	
-	public static String getCurrentVersion() {
-		return CURRENT_VERSION;
-	}
-	
-	public static String getCurrentJarPath() throws URISyntaxException, IOException {
+	public String getCurrentJarPath() throws URISyntaxException, IOException {
 		return getJarPath(getCurrentVersion());
 	}
 	
-	public static String getNewestJarPath() throws URISyntaxException, IOException {
+	public String getNewestJarPath() throws URISyntaxException, IOException {
 		return getJarPath(findNewVersion());
 	}
 	
-	public static String getJarPath(String version) throws URISyntaxException, IOException {
+	public String getJarPath(String version) throws URISyntaxException, IOException {
 		File dir = new File(getTargetFolderPath());
 		return dir.getAbsolutePath() + getJarName(version);
 		
 	}
-	private static String getTargetFolderPath() throws URISyntaxException, MalformedURLException {
+	private String getTargetFolderPath() throws URISyntaxException, MalformedURLException {
 		return Paths.get("target").toUri().toURL().toString().replace("file:/", "");
 	}
 	

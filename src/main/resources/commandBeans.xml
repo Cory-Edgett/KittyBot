@@ -8,16 +8,18 @@
     
     <bean id="command"				class="core.commands.Command" abstract ="true">
     	<property name="prefix"		value="${bot.prefix}"/>
+    	<property name="info"		ref="kittyBotInfo"/>
     	<property name="bot"		ref="kittyBot"/>
-    	<property name="trainer"	ref="trainer"/>
     </bean>
-	<bean id="randomCatCommand"		class="core.commands.RandomCatCommand" 	parent="command"></bean>
+    <bean id="commandListener"		class="core.commands.CommandListener">
+    	<property name="prefix"		value="${bot.prefix}"/>
+    	<property name="respondToBots"	value="${bot.respondToBots}"/>
+    </bean>
+	<bean id="randomCatCommand"		class="core.commands.RandomCatCommand" 	parent="command">
+		<property name="catStreamManager"	ref="threadManager"/>
+	</bean>
     <bean id="helpCommand"			class="core.commands.HelpCommand" 		parent="command"></bean>
     <bean id="updateCommand"		class="core.commands.UpdateCommand" 	parent="command"></bean>
     <bean id="quitCommand"			class="core.commands.QuitCommand"		parent="command"></bean>
     <bean id="versionCommand"		class="core.commands.VersionCommand"	parent="command"></bean>
-    <bean id="vectorMapCommand"		class="core.commands.VectorMapCommand"	parent="command"></bean>
-    <bean id="learnCommand"			class="core.commands.LearnCommand"		parent="command">
-    	<property name="trainer"	ref="trainer"/>
-    </bean>
 </beans>

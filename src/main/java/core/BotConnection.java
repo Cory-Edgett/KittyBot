@@ -2,7 +2,7 @@ package core;
 
 import javax.security.auth.login.LoginException;
 
-import core.commands.Command;
+import core.commands.CommandListener;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
@@ -61,8 +61,8 @@ public class BotConnection {
 	 * @param registerCommand
 	 * 		command to register as an event listener
 	 */
-	public void addEventListener(Command registerCommand) {
-		builder.addEventListener(registerCommand);
+	public void addEventListener(CommandListener listener) {
+		builder.addEventListener(listener);
 	}
 	/**
 	 * Sets the "game" of the bot.

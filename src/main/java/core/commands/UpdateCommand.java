@@ -3,7 +3,6 @@ package core.commands;
 import java.util.Arrays;
 import java.util.List;
 
-import core.utils.KittyBotInfo;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 /**
  * UPDATE PROCESS: 
@@ -22,7 +21,7 @@ public class UpdateCommand extends Command {
 			sendMessage(e, "You are not authorized to use that command.");
 			return;
 		}
-		sendMessage(e, "Updating bot " +KittyBotInfo.getCurrentVersion()+" -> " + KittyBotInfo.findNewVersion());
+		sendMessage(e, "Updating bot " +info.getCurrentVersion()+" -> " + info.findNewVersion());
 		bot.restart();
 	}
 

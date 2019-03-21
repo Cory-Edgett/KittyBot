@@ -12,8 +12,8 @@
     	</property>
     </bean>
    
-    <import resource="learningBeans.xml"/>
     <import resource="commandBeans.xml"/>
+    <import resource="applicationBeans.xml"/>
     
     <bean id="jdaBuilder"			class="net.dv8tion.jda.core.JDABuilder">
     	<property name="autoReconnect"	value="${bot.autoReconnect}"/>
@@ -23,10 +23,16 @@
     	<property name="builder"	ref="jdaBuilder"/>
     </bean>
     <bean id="kittyBotInfo"			class="core.utils.KittyBotInfo">
-    	<property name="CURRENT_VERSION"	value="${build.version}"/>
+    	<property name="CURRENT_VERSION"	value="${project.version}"/>
     </bean>
     <bean id="kittyBot"				class="core.KittyBot" init-method="setupBot" autowire="byType">
     	<property name="presenceMessage"	value="${bot.presence}"/>
     	<property name="ownerId"    		value="${owner.id}"/>
     </bean>
+    
+    <bean id="threadManager"		class="core.ThreadManager">
+    	<property name="threadTree"	ref="threadTree"/>
+    </bean>
+    
+    <bean id="threadTree"			class="core.utils.ThreadTree" scope="prototype"/>
 </beans>

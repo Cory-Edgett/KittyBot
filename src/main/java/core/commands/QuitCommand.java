@@ -13,7 +13,7 @@ public class QuitCommand extends Command {
 			return;
 		}
 		sendMessage(e, "Shutting down...");
-		bot.quit(0);
+		bot.shutdown(0);
 	}
 
 	@Override

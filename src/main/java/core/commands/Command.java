@@ -1,12 +1,9 @@
 package core.commands;
 
-import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.util.StringUtils;
-
 import core.KittyBot;
-import core.nlp.Trainer;
+import core.utils.KittyBotInfo;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -24,12 +21,12 @@ public abstract class Command extends ListenerAdapter {
     public abstract List<String> getUsageInstructions();
     protected String prefix;
 	protected KittyBot bot;
-	protected Trainer trainer;
+	protected KittyBotInfo info;
 
-    public void setTrainer(Trainer trainer) {
-    	this.trainer = trainer;
-    }
-    
+	public void setInfo(KittyBotInfo info) {
+		this.info = info;
+	}
+	
     public void setPrefix(String prefix) {
 		this.prefix = prefix;
 	}
@@ -37,68 +34,13 @@ public abstract class Command extends ListenerAdapter {
 	public void setBot(KittyBot bot) {
 		this.bot = bot;
 	}
-    
-
-    @Override
-    public void onMessageReceived(MessageReceivedEvent e){
-        if (e.getAuthor().isBot() && !respondToBots())
-            return;
-        
-        if (e.isFromType(ChannelType.PRIVATE)) {
-        	System.out.printf("%s[%s] DM'd me: %s\n"
-        			, e.getAuthor().getName()
-        			, e.getAuthor().getId()
-        			, e.getMessage().getContentDisplay());
-        }
-		if (containsCommand(e.getMessage())){
-            onCommand(e, commandArgs(e.getMessage()));
-        }
-        int numOfCat = containsCat(e.getMessage());
-
-		if (numOfCat>0) {
-        	addCatReact(e, numOfCat);
-        }
-        
-    }
-    
-    /**
-     * Reacts numOfCat times to the given message.
-     * @param e
-     * 		the MessageReceivedEvent
-     * @param numOfCat
-     * 		the number of "cat words" in the message,
-     * 			determined by {@link #containsCat(Message) containsCat}
-     */
-    protected void addCatReact(MessageReceivedEvent e, int numOfCat) {
-    	for(String react : Arrays.asList("🐱", "😹", "🐈", "😸")) {
-    		e.getMessage().addReaction(react).complete();
-    		numOfCat--;
-    		if (numOfCat ==0) break;
-    	}
-		
-	}
-    
-    /**
-     * Searches a given string for occurrences of "cat words"
-     * @param message
-     * 		The message to search.
-     * @return the number of occurrences
-     */
-	protected int containsCat(Message message) {
-		int count = 0;
-		for(String str : message.getContentRaw().toLowerCase().replaceAll("[^a-z ]", "").split(" ")) {
-			if(trainer.closeToCat(str)) count++;
-		}
-		return count;
-		
-	}
 	
 	protected boolean containsCommand(Message message) {
         return getAliases().contains(commandArgs(message)[0]);
     }
 
     protected String[] commandArgs(Message message) {
-        return commandArgs(message.getContentDisplay());
+        return commandArgs(message.getContentDisplay().toLowerCase());
     }
 
     protected String[] commandArgs(String string) {
@@ -108,6 +50,10 @@ public abstract class Command extends ListenerAdapter {
     protected void sendMessage(MessageChannel channel, Message message) {
     	channel.sendMessage(message).queue();
     }
+    
+	protected void sendMessage(MessageChannel channel, String string) {
+		channel.sendMessage(string).complete();
+	}
 
     protected void sendMessage(MessageReceivedEvent e, Message message) {
         sendMessage(e.getChannel(), message);
@@ -136,11 +82,7 @@ public abstract class Command extends ListenerAdapter {
     	}
     }
     
-    protected boolean respondToBots() {
-        return false;
-    }
-    
-    protected boolean isOwner(MessageReceivedEvent e) {
-    	return e.getAuthor().getId().equals(bot.getOwnerId());
-    }
+	protected boolean isOwner(MessageReceivedEvent e) {
+		return e.getAuthor().getId().equals(bot.getOwnerId());
+	}
 }
