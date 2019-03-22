@@ -54,16 +54,13 @@ public class BotConnection {
 	}
 	
 	/**
-	 * Sets the given command as an event listener for the bot.
-	 * Note: Every command must be it's own listener, so if you have N commands,
-	 * 			every event will be handled N times.
-	 * 
-	 * @param registerCommand
-	 * 		command to register as an event listener
+	 * Sets the given implementation of {@link ListenerAdapter} as an event listener for the bot.
+	 * @param listener	
 	 */
-	public void addEventListener(CommandListener listener) {
+	public void addEventListener(ListenerAdapter listener) {
 		builder.addEventListener(listener);
 	}
+	
 	/**
 	 * Sets the "game" of the bot.
 	 * 
