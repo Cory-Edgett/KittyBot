@@ -22,7 +22,7 @@
     <bean id="botConnection"		class="core.BotConnection">
     	<property name="builder"	ref="jdaBuilder"/>
     </bean>
-    <bean id="kittyBotInfo"			class="core.utils.KittyBotInfo">
+    <bean id="kittyBotInfo"			class="utils.KittyBotInfo">
     	<property name="CURRENT_VERSION"	value="${project.version}"/>
     </bean>
     <bean id="kittyBot"				class="core.KittyBot" init-method="setupBot" autowire="byType">
@@ -34,5 +34,5 @@
     	<property name="threadTree"	ref="threadTree"/>
     </bean>
     
-    <bean id="threadTree"			class="core.utils.ThreadTree" scope="prototype"/>
+    <bean id="threadTree"			class="utils.ThreadTree" scope="prototype"/>
 </beans>

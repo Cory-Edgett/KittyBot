@@ -3,13 +3,13 @@ package admin.app.controller;
 import java.util.ArrayList;
 
 import core.KittyBot;
-import core.utils.ChatLogTree;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import utils.ChatLogTree;
 
 public class ChatLogManager extends ListenerAdapter {
 	private ChatLogTree chatLogs;
@@ -22,17 +22,6 @@ public class ChatLogManager extends ListenerAdapter {
 				, e.getChannel()
 				, e.getAuthor().getName() + ": "+ e.getMessage().getContentDisplay());
 
-	}
-	
-	public void init() throws InterruptedException {
-		bot.getConnection().getApi().addEventListener(this);
-    	
-    	bot.getGuilds().forEach(guild -> {
-    		guild.getTextChannels().forEach(channel -> {
-    			if(channel.canTalk()) 
-    				chatLogs.addLeaf(guild.getIdLong(), channel.getIdLong(), FXCollections.observableArrayList(new ArrayList<>()));;
-    		});
-    	});
 	}
 	
 	/**
@@ -49,6 +38,20 @@ public class ChatLogManager extends ListenerAdapter {
 		if(chatLogs.contains(guildId, channelId)) 
 			return chatLogs.getChatLog(guildId, channelId) ;
 		return chatLogs.addLeaf(guildId, channelId, FXCollections.observableArrayList(new ArrayList<>()));
+	}
+	
+	public void init() throws InterruptedException {
+		bot.getConnection().getApi().addEventListener(this);
+    	buildChatLogs();
+	}
+	
+	private void buildChatLogs() throws InterruptedException {
+		bot.getGuilds().forEach(guild -> {
+    		guild.getTextChannels().forEach(channel -> {
+    			if(channel.canTalk()) 
+    				chatLogs.addLeaf(guild.getIdLong(), channel.getIdLong(), FXCollections.observableArrayList(new ArrayList<>()));;
+    		});
+    	});
 	}
 	
 	public void setChatLogs(ChatLogTree chatLogs) {

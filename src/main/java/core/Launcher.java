@@ -4,9 +4,9 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import admin.app.controller.ApplicationController;
-import core.utils.ExceptionHandler;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import utils.ExceptionHandler;
 
 public class Launcher extends Application {
 	public static void main(String[] args) {

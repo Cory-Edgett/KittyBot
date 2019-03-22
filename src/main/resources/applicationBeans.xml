@@ -15,5 +15,5 @@
 		<property name="chatLogs"		ref="chatLogTree"/>
 	</bean>
 	
-	<bean id="chatLogTree"						class="core.utils.ChatLogTree"/>
+	<bean id="chatLogTree"						class="utils.ChatLogTree"/>
 </beans>

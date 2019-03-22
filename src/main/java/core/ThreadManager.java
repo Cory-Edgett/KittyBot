@@ -1,9 +1,10 @@
 package core;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import core.utils.DiscordTree;
+
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import utils.DiscordTree;
 
 public class ThreadManager {
 	private DiscordTree<Thread> threadTree;
@@ -41,8 +42,11 @@ public class ThreadManager {
 		threadCount.decrementAndGet();
 	}
 	
+
+	
 	public static void waitForThreads() throws InterruptedException {
 		while(!threadCount.compareAndSet(0, 0)) Thread.sleep(1000);
 	}
+	
 	
 }

@@ -4,14 +4,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import utils.TheCatAPI;
 import core.ThreadManager;
-import core.utils.TheCatAPI;
 
 public class RandomCatCommand extends Command {
 	

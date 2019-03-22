@@ -83,6 +83,7 @@ public class ApplicationController implements Initializable  {
     public void selectGuild() {
     	selectedGuild = guilds.getSelectionModel().getSelectedItem();
     	selectedChannel = null;
+    	chatProperty.set(null);
 		List<TextChannel> guildChannels = new ArrayList<>(bot.getTextChannels(selectedGuild));
 		guildChannels.removeIf(c -> !c.canTalk());
     	channelsProperty.set(FXCollections.observableArrayList(guildChannels));
@@ -109,8 +110,6 @@ public class ApplicationController implements Initializable  {
 		stage.show();
 	}
 
-
-	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {

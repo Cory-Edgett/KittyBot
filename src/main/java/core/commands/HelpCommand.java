@@ -6,12 +6,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
-import core.utils.ExceptionHandler;
-import core.utils.TheCatAPI;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import utils.ExceptionHandler;
+import utils.TheCatAPI;
 
 public class HelpCommand extends Command {
     private static final String NO_NAME = "No name provided for this command. Sorry!";

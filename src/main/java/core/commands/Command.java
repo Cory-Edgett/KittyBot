@@ -3,7 +3,6 @@ package core.commands;
 import java.util.List;
 
 import core.KittyBot;
-import core.utils.KittyBotInfo;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -12,6 +11,7 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import utils.KittyBotInfo;
 
 public abstract class Command extends ListenerAdapter {
     public abstract void onCommand(MessageReceivedEvent e, String[] args);

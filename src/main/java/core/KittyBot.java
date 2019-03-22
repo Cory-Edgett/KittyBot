@@ -11,13 +11,13 @@ import core.commands.QuitCommand;
 import core.commands.RandomCatCommand;
 import core.commands.UpdateCommand;
 import core.commands.VersionCommand;
-import core.utils.ExceptionHandler;
-import core.utils.KittyBotInfo;
 import core.BotConnection;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import utils.ExceptionHandler;
+import utils.KittyBotInfo;
 
 public class KittyBot {
 	
@@ -90,7 +90,7 @@ public class KittyBot {
 		this.connection = connection;
 	}
 	
-/*-----------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------*/
 	/**
 	 * Performs all the startup tasks for the bot.
 	 * 
@@ -187,7 +187,7 @@ public class KittyBot {
 	 * @param jarPath
 	 * 		The ABSOLUTE path to the given jar file 
 	 * 		(kittyBot can automatically find it's latest version with 
-	 * {@link core.utils.KittyBotInfo#getNewestJarPath() KittyBotInfo.getNewestJarPath})
+	 * {@link utils.KittyBotInfo#getNewestJarPath() KittyBotInfo.getNewestJarPath})
 	 * @throws IOException
 	 */
 	public void start(String jarPath) throws IOException {
