@@ -3,7 +3,13 @@ package core;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+
+import javax.annotation.PostConstruct;
 import javax.security.auth.login.LoginException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import core.commands.CommandListener;
 import core.commands.HelpCommand;
@@ -11,14 +17,15 @@ import core.commands.QuitCommand;
 import core.commands.RandomCatCommand;
 import core.commands.UpdateCommand;
 import core.commands.VersionCommand;
+import core.utils.ExceptionHandler;
+import core.utils.KittyBotInfo;
 import core.BotConnection;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
-import utils.ExceptionHandler;
-import utils.KittyBotInfo;
 
+@Component
 public class KittyBot {
 	
 	//----autowired----//
@@ -32,24 +39,52 @@ public class KittyBot {
 	private CommandListener listener;
 	private ThreadManager threadManager;
 	//-----------------//
-	/* values found in Config.properties */
+	/* values found in application.properties */
+	@Value("${bot.presence}")
 	private String presenceMessage;
+	@Value("${owner.id}")
 	private String ownerId;
 	
-	public void setThreadManager(ThreadManager threadManager) {
-		this.threadManager = threadManager;
+	@Autowired
+	public void setConnection(BotConnection connection) {
+		this.connection = connection;
 	}
-	
-	public void setListener(CommandListener listener) {
-		this.listener = listener;
+	@Autowired
+	public void setHelpCommand(HelpCommand helpCommand) {
+		this.helpCommand = helpCommand;
 	}
-	
+	@Autowired
+	public void setRandomCatCommand(RandomCatCommand randomCatCommand) {
+		this.randomCatCommand = randomCatCommand;
+	}
+	@Autowired
+	public void setUpdateCommand(UpdateCommand updateCommand) {
+		this.updateCommand = updateCommand;
+	}
+	@Autowired
+	public void setQuitCommand(QuitCommand quitCommand) {
+		this.quitCommand = quitCommand;
+	}
+	@Autowired
+	public void setVersionCommand(VersionCommand versionCommand) {
+		this.versionCommand = versionCommand;
+	}
+	@Autowired
 	public void setInfo(KittyBotInfo info) {
 		this.info = info;
 	}
-	
+	@Autowired
+	public void setListener(CommandListener listener) {
+		this.listener = listener;
+	}
+	@Autowired
+	public void setThreadManager(ThreadManager threadManager) {
+		this.threadManager = threadManager;
+	}
+
 	public void setPresenceMessage(String presenceMessage) {
 		this.presenceMessage = presenceMessage;
+		connection.setGame(presenceMessage);
 	}
 	
 	public void setOwnerId(String ownerId) {
@@ -59,35 +94,9 @@ public class KittyBot {
 	public String getOwnerId() {
 		return this.ownerId;
 	}
-
-	public void setHelpCommand(HelpCommand help) {
-		this.helpCommand = help;
-	}
-
-	public void setRandomCatCommand(RandomCatCommand randomCat) {
-		this.randomCatCommand = randomCat;
-	}
 	
-	public void setUpdateCommand(UpdateCommand update) {
-		this.updateCommand = update;
-	}
-	
-	public void setQuitCommand(QuitCommand quit) {
-		this.quitCommand = quit;
-	}
-	
-	public void setVersionCommand(VersionCommand v) {
-		this.versionCommand = v;
-	}
-	
-
 	public BotConnection getConnection() {
 		return connection;
-	}
-	
-
-	public void setConnection(BotConnection connection) {
-		this.connection = connection;
 	}
 	
 /*-------------------------------------------------------------------*/
@@ -101,6 +110,7 @@ public class KittyBot {
 	 * @throws InterruptedException
 	 * 			In case the bot is interrupted while waiting for ready.
 	 */
+	@PostConstruct
 	public void setupBot() throws LoginException, InterruptedException {
 		registerListener();
 		connection.login();
@@ -187,7 +197,7 @@ public class KittyBot {
 	 * @param jarPath
 	 * 		The ABSOLUTE path to the given jar file 
 	 * 		(kittyBot can automatically find it's latest version with 
-	 * {@link utils.KittyBotInfo#getNewestJarPath() KittyBotInfo.getNewestJarPath})
+	 * {@link core.utils.KittyBotInfo#getNewestJarPath() KittyBotInfo.getNewestJarPath})
 	 * @throws IOException
 	 */
 	public void start(String jarPath) throws IOException {

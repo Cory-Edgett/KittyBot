@@ -2,23 +2,25 @@ package core;
 
 import javax.security.auth.login.LoginException;
 
-import core.commands.CommandListener;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Game.GameType;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+@Component
 public class BotConnection {
 	private JDA api;
 	private JDABuilder builder;
 	
+	@Value("${bot.token}")
+	private String token;
 	
-	public JDABuilder getBuilder() {
-		return builder;
-	}
-
-	public void setBuilder(JDABuilder builder) {
-		this.builder = builder;
+	public BotConnection() {
+		this.builder = new JDABuilder(token);
 	}
 	
 	/**
@@ -27,6 +29,7 @@ public class BotConnection {
 	 * @throws LoginException
 	 */
 	public void login() throws LoginException {
+		builder.setToken(token);
 		this.api = builder.build();
 	}
 	
@@ -78,6 +81,10 @@ public class BotConnection {
 	 */
 	public void awaitReady() throws InterruptedException {
 		api.awaitReady();
+	}
+
+	public void setBuilder(JDABuilder builder) {
+		this.builder = builder;
 	}
 	
 

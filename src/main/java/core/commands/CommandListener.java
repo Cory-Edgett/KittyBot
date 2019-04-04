@@ -2,19 +2,24 @@ package core.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+@Component
 public class CommandListener extends ListenerAdapter {
 	 private List<Command> commands;
+	 
+	 @Value("${bot.prefix}")
 	 private String prefix;
+	 
 	 public CommandListener() {
 		 commands = new ArrayList<>();
 	 }
-	 
-	public void setRespondToBots(Boolean bool) {
-	}
 	
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;

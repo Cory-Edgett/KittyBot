@@ -3,6 +3,8 @@ package core.commands;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 /**
  * UPDATE PROCESS: 
@@ -12,6 +14,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
  * @author Cortlan Edgett
  *
  */
+@Component
 public class UpdateCommand extends Command {
 	
 	

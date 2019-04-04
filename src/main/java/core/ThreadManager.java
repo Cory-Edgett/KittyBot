@@ -2,11 +2,17 @@ package core;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import core.utils.DiscordTree;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
-import utils.DiscordTree;
 
+@Component
 public class ThreadManager {
+	
+	@Autowired
 	private DiscordTree<Thread> threadTree;
 	private static AtomicInteger threadCount = new AtomicInteger(0);
 	

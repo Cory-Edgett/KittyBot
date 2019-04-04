@@ -4,16 +4,23 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import utils.TheCatAPI;
 import core.ThreadManager;
+import core.utils.TheCatAPI;
 
+@Component
 public class RandomCatCommand extends Command {
 	
+	@Autowired
 	private ThreadManager catStreamManager;
 	private static final long TIMEOUT = 1000000;
+	
 	public void setCatStreamManager(ThreadManager catStreamManager) {
 		this.catStreamManager = catStreamManager;
 	}
@@ -68,9 +75,9 @@ public class RandomCatCommand extends Command {
 
 
 	public void sendCat(MessageChannel channel) {
-		String imageUrl;
+		String imageUrl = "";
 		try {
-			imageUrl = TheCatAPI.getCat(null);
+			while((imageUrl = TheCatAPI.getCat(null)).equals(""));
 			sendImage(channel, imageUrl);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block

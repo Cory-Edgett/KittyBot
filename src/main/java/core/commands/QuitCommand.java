@@ -3,8 +3,11 @@ package core.commands;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
+@Component
 public class QuitCommand extends Command {
 	@Override
 	public void onCommand(MessageReceivedEvent e, String[] args) {

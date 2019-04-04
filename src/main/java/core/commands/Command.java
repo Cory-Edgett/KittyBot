@@ -2,7 +2,10 @@ package core.commands;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import core.KittyBot;
+import core.utils.KittyBotInfo;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -11,7 +14,7 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import utils.KittyBotInfo;
+
 
 public abstract class Command extends ListenerAdapter {
     public abstract void onCommand(MessageReceivedEvent e, String[] args);
@@ -19,9 +22,15 @@ public abstract class Command extends ListenerAdapter {
     public abstract String getDescription();
     public abstract String getName();
     public abstract List<String> getUsageInstructions();
+    
+    @Value("${bot.prefix}") 
     protected String prefix;
-	protected KittyBot bot;
-	protected KittyBotInfo info;
+    
+    @Autowired 
+    protected KittyBot bot;
+    
+    @Autowired 
+    protected KittyBotInfo info;
 
 	public void setInfo(KittyBotInfo info) {
 		this.info = info;
@@ -39,6 +48,7 @@ public abstract class Command extends ListenerAdapter {
         return getAliases().contains(commandArgs(message)[0]);
     }
 
+    /*---------------------------------------------------------------------*/
     protected String[] commandArgs(Message message) {
         return commandArgs(message.getContentDisplay().toLowerCase());
     }
@@ -47,12 +57,13 @@ public abstract class Command extends ListenerAdapter {
         return string.split(" ");
     }
     
+    /*---------------------------------------------------------------------*/
     protected void sendMessage(MessageChannel channel, Message message) {
     	channel.sendMessage(message).queue();
     }
     
 	protected void sendMessage(MessageChannel channel, String string) {
-		channel.sendMessage(string).complete();
+		channel.sendMessage(string).queue();
 	}
 
     protected void sendMessage(MessageReceivedEvent e, Message message) {
@@ -63,6 +74,7 @@ public abstract class Command extends ListenerAdapter {
         sendMessage(e, new MessageBuilder().append(message).build());
     }
     
+    /*---------------------------------------------------------------------*/
     protected void sendImage(MessageChannel channel, String url) {
     	EmbedBuilder eb = new EmbedBuilder();
     	eb.setImage(url);
@@ -84,5 +96,9 @@ public abstract class Command extends ListenerAdapter {
     
 	protected boolean isOwner(MessageReceivedEvent e) {
 		return e.getAuthor().getId().equals(bot.getOwnerId());
+	}
+	
+	protected boolean isSelf(MessageReceivedEvent e) {
+		return e.getAuthor().getIdLong() == bot.getSelf().getIdLong();
 	}
 }

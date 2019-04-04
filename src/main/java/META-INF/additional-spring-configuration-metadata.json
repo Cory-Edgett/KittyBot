@@ -1,0 +1,27 @@
+{"properties": [
+  {
+    "name": "bot.prefix",
+    "type": "java.lang.String",
+    "description": "A description for 'bot.prefix'"
+  },
+  {
+    "name": "bot.presence",
+    "type": "java.lang.String",
+    "description": "A description for 'bot.presence'"
+  },
+  {
+    "name": "bot.token",
+    "type": "java.lang.String",
+    "description": "A description for 'bot.token'"
+  },
+  {
+    "name": "build.version",
+    "type": "java.lang.String",
+    "description": "A description for 'build.version'"
+  },
+  {
+    "name": "owner.id",
+    "type": "java.lang.String",
+    "description": "A description for 'owner.id'"
+  }
+]}
