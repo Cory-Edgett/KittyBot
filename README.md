@@ -12,3 +12,5 @@ In Config.properties:
 [Java Discord API](https://github.com/DV8FromTheWorld/JDA)
 
 [Spring Framework](https://spring.io/)
+
+[The Cat API](https://thecatapi.com/)
